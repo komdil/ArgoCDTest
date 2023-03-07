@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: dreambookcontainer
-        image: komdil/dreambook:v1
+        image: komdil/dreambook:v2
         imagePullPolicy: Always
         ports:
         - containerPort: 80
