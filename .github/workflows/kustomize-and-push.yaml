@@ -26,7 +26,7 @@ jobs:
           cd ./dev
           kustomize edit set image komdil/dreambook:30
           cat kustomization.yaml
-          kustomize build . > ./deployment.yaml
+          kustomize build . > ./deployment/deployment.yaml
 
       - name: git commit and push
         uses: stefanzweifel/git-auto-commit-action@v4.14.1
