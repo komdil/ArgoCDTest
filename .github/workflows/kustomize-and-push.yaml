@@ -16,7 +16,7 @@ jobs:
       with:
         args: |
           cp /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/
-          kubectl version --client
+          kubectl version
 
     - name: Kustomize and apply
       run: |
