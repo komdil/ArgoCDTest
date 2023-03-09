@@ -1,0 +1,23 @@
+name: Kustomize and Push
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  kustomize-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install kubectl
+      uses: azure/kubectl@v1.2.1
+
+    - name: Kustomize and apply
+      run: |
+        kubectl kustomize dev/kustomization | kubectl apply -f -
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config user.name "github-actions[bot]"
+        git commit -am "Kustomize and apply"
+        git push
