@@ -22,7 +22,7 @@ jobs:
       - name: change manifests
         run: |
           cd ./dev
-          kustomize edit set image koble.azurecr.io/sample:${{ github.event.client_payload.version }}
+          kustomize edit set image komdil/dreambook:${{ github.event.client_payload.version }}
           cat kustomization.yaml
           kustomize build . > ./deployments.yaml
 
