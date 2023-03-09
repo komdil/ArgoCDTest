@@ -16,7 +16,7 @@ jobs:
 
     - name: Kustomize and apply
       run: |
-        kubectl kustomize dev/kustomization | kubectl apply -f -
+        kubectl kustomize dev/kustomization.yaml | kubectl apply -f -
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git config user.name "github-actions[bot]"
         git commit -am "Kustomize and apply"
