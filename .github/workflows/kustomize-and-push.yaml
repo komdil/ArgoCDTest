@@ -1,13 +1,13 @@
 name: Kustomize and push
 on:
-  push:
-    branches: [ master ]
-  # repository_dispatch:
-  #   inputs:
-  #     tag:
-  #       description: "Tag"
-  #       default: "30"
-  #       required: true
+  repository_dispatch:
+    types: "dreambook-dev"
+    #  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag"
+        default: "1.1.1"
+        required: true
 jobs:
   kustomize-and-push:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
       - name: change manifests
         run: |
           cd ./dev
-          kustomize edit set image komdil/dreambook:30
+          kustomize edit set image komdil/dreambook:${{ github.event.client_payload.version }}
           cat kustomization.yaml
           kustomize build . > ./deployment/deployment.yaml
 
@@ -32,4 +32,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4.14.1
         with:
           # Commit message
-          commit_message: push 30 version
+          commit_message: push ${{ github.event.client_payload.version }} version
