@@ -26,7 +26,7 @@ spec:
         app: api_deploymentpod
     spec:
       containers:
-      - image: komdil/dreambook:v2
+      - image: komdil/dreambook:30
         imagePullPolicy: Always
         name: dreambookcontainer
         ports:

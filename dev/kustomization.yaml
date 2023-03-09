@@ -4,4 +4,4 @@ resources:
 - deployment-template.yaml
 images:
 - name: komdil/dreambook
-  newTag: "v2"
+  newTag: "30"
