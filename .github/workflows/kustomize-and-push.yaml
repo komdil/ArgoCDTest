@@ -1,28 +1,31 @@
-name: Kustomize and Push
-
+name: Kustomize and push
 on:
-  push:
-    branches: [ master ]
-
+  repository_dispatch:
+    inputs:
+      tag:
+        description: "Tag"
+        default: "30"
+        required: true
 jobs:
   kustomize-and-push:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: checkout main repo
+        uses: actions/checkout@v2
 
-    - name: Install kubectl
-      uses: docker://docker.io/bitnami/kubectl:latest
-      with:
-        args: |
-          cp /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/
-          kubectl version
+      - uses: imranismail/setup-kustomize@v1
+        with:
+          kustomize-version: "3.9.2"
 
-    - name: Kustomize and apply
-      run: |
-        kubectl kustomize dev/kustomization.yaml | kubectl apply -f -
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git config user.name "github-actions[bot]"
-        git commit -am "Kustomize and apply"
-        git push
+      - name: change manifests
+        run: |
+          cd ./dev
+          kustomize edit set image koble.azurecr.io/sample:${{ github.event.client_payload.version }}
+          cat kustomization.yaml
+          kustomize build . > ./deployments.yaml
 
+      - name: git commit and push
+        uses: stefanzweifel/git-auto-commit-action@v4.14.1
+        with:
+          # Commit message
+          commit_message: push ${{ github.event.inputs.tag }} version
