@@ -11,6 +11,8 @@ on:
 jobs:
   kustomize-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # To push a branch 
     steps:
       - name: checkout main repo
         uses: actions/checkout@v2
