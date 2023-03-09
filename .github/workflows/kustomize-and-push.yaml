@@ -1,11 +1,13 @@
 name: Kustomize and push
 on:
-  repository_dispatch:
-    inputs:
-      tag:
-        description: "Tag"
-        default: "30"
-        required: true
+  push:
+    branches: [ master ]
+  # repository_dispatch:
+  #   inputs:
+  #     tag:
+  #       description: "Tag"
+  #       default: "30"
+  #       required: true
 jobs:
   kustomize-and-push:
     runs-on: ubuntu-latest
