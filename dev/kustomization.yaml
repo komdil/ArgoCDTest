@@ -6,3 +6,4 @@ resources:
 
 images:
 - name: komdil/dreambook
+  newTag: "30"
