@@ -1,0 +1,4 @@
+apiVersion: v2
+name: dreambookapi
+description: A Helm chart for deploying the Dreambook API.
+version: v1
