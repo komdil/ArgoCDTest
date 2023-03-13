@@ -2,6 +2,7 @@ replicas: 2
 image: komdil/dreambook:v1
 host: dilshod.20.219.235.7.nip.io
 service:
+  type: "LoadBalancer"
   name: dreambookdeploymentservice
   port: 80
 
@@ -15,7 +16,7 @@ serviceAccount:
   name: ""
 
 ingress:
-  enabled: true
+  enabled: false
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
