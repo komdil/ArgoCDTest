@@ -3,16 +3,51 @@ kind: ConfigMap
 metadata:
   name: argocd-notifications-cm
 data:
-  defaultTriggers: |
-    - on-sync-running
-    - on-sync-succeeded
+  trigger.on-deployed: |
+    when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
+    oncePer: app.status.sync.revision
+    send: [app-sync-succeeded]
   service.teams: |
     recipientUrls: 
       ArgoCD: $channel-teams-url
-  template.my-custom-template-teams-template: |
+  template.app-sync-succeeded: |
+    email:
+      subject: New version of an application {{.app.metadata.name}} is up and running.
     message: |
-      The sync operation of application {{.app.metadata.name}} has started at {{.app.status.operationState.startedAt}}.
-      Sync operation details are available at: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true .
+      {{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application {{.app.metadata.name}} is now running new version of deployments manifests.
+    slack:
+      attachments: |
+        [{
+          "title": "{{ .app.metadata.name}}",
+          "title_link":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "color": "#18be52",
+          "fields": [
+          {
+            "title": "Sync Status",
+            "value": "{{.app.status.sync.status}}",
+            "short": true
+          },
+          {
+            "title": "Repository",
+            "value": "{{.app.spec.source.repoURL}}",
+            "short": true
+          },
+          {
+            "title": "Revision",
+            "value": "{{.app.status.sync.revision}}",
+            "short": true
+          }
+          {{range $index, $c := .app.status.conditions}}
+          {{if not $index}},{{end}}
+          {{if $index}},{{end}}
+          {
+            "title": "{{$c.type}}",
+            "value": "{{$c.message}}",
+            "short": true
+          }
+          {{end}}
+          ]
+        }]
     teams:
       facts: |
         [{
@@ -20,12 +55,12 @@ data:
           "value": "{{.app.status.sync.status}}"
         },
         {
-          "name": "Started at",
-          "value": "{{.app.status.operationState.startedAt}}"
-        },
-        {
           "name": "Repository",
           "value": "{{.app.spec.source.repoURL}}"
+        },
+        {
+          "name": "Revision",
+          "value": "{{.app.status.sync.revision}}"
         }
         {{range $index, $c := .app.status.conditions}}
           {{if not $index}},{{end}}
@@ -39,10 +74,10 @@ data:
       potentialAction: |-
         [{
           "@type":"OpenUri",
-          "name":"Open Operation",
+          "name":"Operation Application",
           "targets":[{
             "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
           }]
         },
         {
@@ -53,4 +88,4 @@ data:
             "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
           }]
         }]
-      title: Start syncing application {{.app.metadata.name}}.
+      title: New version of an application {{.app.metadata.name}} is up and running.
