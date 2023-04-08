@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+data:
+  defaultTriggers: |
+    - on-sync-running
+    - on-sync-succeeded
+  service.teams: |
+    recipientUrls: 
+      ArgoCD: $channel-teams-url
+  template.my-custom-template-teams-template: |
+    message: |
+      The sync operation of application {{.app.metadata.name}} has started at {{.app.status.operationState.startedAt}}.
+      Sync operation details are available at: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true .
+    teams:
+      facts: |
+        [{
+          "name": "Sync Status",
+          "value": "{{.app.status.sync.status}}"
+        },
+        {
+          "name": "Started at",
+          "value": "{{.app.status.operationState.startedAt}}"
+        },
+        {
+          "name": "Repository",
+          "value": "{{.app.spec.source.repoURL}}"
+        }
+        {{range $index, $c := .app.status.conditions}}
+          {{if not $index}},{{end}}
+          {{if $index}},{{end}}
+          {
+            "name": "{{$c.type}}",
+            "value": "{{$c.message}}",
+          }
+        {{end}}
+        ]
+      potentialAction: |-
+        [{
+          "@type":"OpenUri",
+          "name":"Open Operation",
+          "targets":[{
+            "os":"default",
+            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+          }]
+        },
+        {
+          "@type":"OpenUri",
+          "name":"Open Repository",
+          "targets":[{
+            "os":"default",
+            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
+          }]
+        }]
+      title: Start syncing application {{.app.metadata.name}}.
