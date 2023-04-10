@@ -4,8 +4,8 @@ metadata:
   name: dreambook-argo-application
   namespace: argocd
   annotations:
-    notifications.argoproj.io/subscribe.on-sync-running.teams: ArgoCD
-    notifications.argoproj.io/subscribe.on-sync-succeeded.teams: ArgoCD
+    notifications.argoproj.io/subscribe.on-deployed.teams-webhook: ""
+    notifications.argoproj.io/subscribe.on-deployed.teams: ArgoCD
 spec:
   project: default
   source:
