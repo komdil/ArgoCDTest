@@ -16,7 +16,7 @@ metadata:
   name: dreambookapideployment
   namespace: dilshod
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: api_deploymentpod
@@ -26,15 +26,7 @@ spec:
         app: api_deploymentpod
     spec:
       containers:
-      - image: komdil/dreambook:1.0.17
-        readinessProbe:
-              httpGet:
-                path: /erp/Demo/Status
-                port: 8002
-              initialDelaySeconds: 3
-              periodSeconds: 10
-              timeoutSeconds: 10
-              successThreshold: 2
+      - image: komdil/dreambook:1.0.18
         imagePullPolicy: Always
         name: dreambookcontainer
         ports:
