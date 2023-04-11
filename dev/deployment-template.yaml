@@ -7,7 +7,6 @@ spec:
   selector:
     matchLabels:
       app: api_deploymentpod
-  replicas: 2
   template:
     metadata:
       labels:
