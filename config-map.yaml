@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 data:
   trigger.on-health-degraded: |
-    - when: app.status.health.status == 'Degraded'
+    - when: app.status.health.status != 'Degraded'
       send: [app-health-degraded-teams]
   trigger.on-sync-failed: |
     - when: app.status.operationState.phase in ['Error', 'Failed']
