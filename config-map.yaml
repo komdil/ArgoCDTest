@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 data:
   trigger.on-health-degraded: |
-    - when: app.status.health.status != 'Degraded'
+    - when: app.status.health.status == 'Degraded'
       send: [app-health-degraded-teams]
   trigger.on-sync-failed: |
     - when: app.status.operationState.phase in ['Error', 'Failed']
@@ -15,7 +15,7 @@ data:
       send: [app-sync-unknown-teams]
   service.teams: |
     recipientUrls: 
-      ArgoCD: https://mrasbs.webhook.office.com/webhookb2/ac8035ee-cb56-44fa-b129-e453d02ad6d7@2f941d93-4301-4de5-bba2-20344d055b9b/IncomingWebhook/efde8f3afb6c499184b46506e14ead93/c4bd6eca-7bda-4874-bf03-8b90c00180a7
+      ArgoCD: $channel-teams-url
   template.app-health-degraded-teams: |
     email:
     subject: Application {{.app.metadata.name}} has degraded.

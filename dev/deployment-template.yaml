@@ -15,14 +15,6 @@ spec:
       containers:
       - name: dreambookcontainer
         image: komdil/dreambook:v2
-        readinessProbe:
-            httpGet:
-              path: /erp/Demo/Status
-              port: 8002
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 10
-            successThreshold: 2
         imagePullPolicy: Always
         ports:
         - containerPort: 80
