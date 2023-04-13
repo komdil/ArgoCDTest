@@ -16,6 +16,7 @@ metadata:
   name: dreambookapideployment
   namespace: dilshod
 spec:
+  progressDeadlineSeconds: 20
   selector:
     matchLabels:
       app: api_deploymentpod
@@ -25,7 +26,7 @@ spec:
         app: api_deploymentpod
     spec:
       containers:
-      - image: komdil/dreambook:1.0.19
+      - image: komdil/dreambook:1.0.20
         imagePullPolicy: Always
         name: dreambookcontainer
         ports:
