@@ -4,6 +4,7 @@ metadata:
   name: dreambookapideployment
   namespace: dilshod
 spec:
+  progressDeadlineSeconds: 20
   selector:
     matchLabels:
       app: api_deploymentpod
